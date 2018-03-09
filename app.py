@@ -4,11 +4,11 @@ import dash
 from dash.dependencies import Input, Output
 import dash_core_components as dcc
 import dash_html_components as html
-
 import pandas as pd
+import os
 
-app = dash.Dash()
-
+app = dash.Dash(__name__)
+server = app.server
 
 # read data for tables (one df per table)
 df_fund_facts = pd.read_csv('https://plot.ly/~bdun9/2754.csv')
@@ -617,4 +617,4 @@ for js in external_js:
 
 
 if __name__ == '__main__':
-    app.server.run()
+    app.run_server(debug=True)
