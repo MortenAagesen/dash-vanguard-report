@@ -4,6 +4,7 @@ import dash
 from dash.dependencies import Input, Output
 import dash_core_components as dcc
 import dash_html_components as html
+import plotly.graph_objs as go
 import pandas as pd
 import os
 
@@ -26,6 +27,8 @@ df_dividend = pd.read_csv('https://plot.ly/~bdun9/2800.csv')
 df_realized = pd.read_csv('https://plot.ly/~bdun9/2801.csv')
 df_unrealized = pd.read_csv('https://plot.ly/~bdun9/2802.csv')
 
+df_graph = pd.read_csv("https://plot.ly/~bdun9/2804.csv")
+
 # reusable componenets
 def make_dash_table(df):
     ''' Return a dash definitio of an HTML table for a Pandas dataframe '''
@@ -39,7 +42,7 @@ def make_dash_table(df):
 
 
 def print_button():
-    printButton = html.A(['Print PDF'],className="button no-print",style={'position': "absolute", 'top': '-40', 'right': '0'})
+    printButton = html.A(['Print PDF'],className="button no-print print",style={'position': "absolute", 'top': '-40', 'right': '0'})
     return printButton
 
 # includes page/full view
@@ -139,15 +142,153 @@ overview = html.Div([  # page 1
                 html.Div([
                     html.H6('Average annual performance',
                             className="gs-header gs-text-header padded"),
-                    html.Iframe(src="https://plot.ly/~bdun9/2750.embed?modebar=false&link=false&autosize=true", \
-                                seamless="seamless", style={'border': '0', 'width': "100%", 'height': "200"})
+                    dcc.Graph(
+                        id = "graph-1",
+                        figure={
+                            'data': [
+                                go.Bar(
+                                    x = ["1 Year", "3 Year", "5 Year", "10 Year", "41 Year"],
+                                    y = ["21.67", "11.26", "15.62", "8.37", "11.11"],
+                                    marker = {
+                                      "color": "rgb(53, 83, 255)",
+                                      "line": {
+                                        "color": "rgb(255, 255, 255)",
+                                        "width": 2
+                                      }
+                                    },
+                                    name = "500 Index Fund",
+                                    type = "bar"
+                                ),
+                                go.Bar(
+                                    x = ["1 Year", "3 Year", "5 Year", "10 Year", "41 Year"],
+                                    y = ["21.83", "11.41", "15.79", "8.50"],
+                                    marker = {
+                                      "color": "rgb(255, 225, 53)",
+                                      "line": {
+                                        "color": "rgb(255, 255, 255)",
+                                        "width": 2
+                                        }
+                                    },
+                                    name = "S&P 500 Index",
+                                    type = "bar"
+                                ),
+                            ],
+                            'layout': go.Layout(
+                                autosize = False,
+                                bargap = 0.35,
+                                font = {
+                                  "family": "Raleway",
+                                  "size": 10
+                                },
+                                height = 200,
+                                hovermode = "closest",
+                                legend = {
+                                  "x": -0.0228945952895,
+                                  "y": -0.189563896463,
+                                  "orientation": "h",
+                                  "yanchor": "top"
+                                },
+                                margin = {
+                                  "r": 0,
+                                  "t": 20,
+                                  "b": 10,
+                                  "l": 10
+                                },
+                                showlegend = True,
+                                title = "",
+                                width = 340,
+                                xaxis = {
+                                  "autorange": True,
+                                  "range": [-0.5, 4.5],
+                                  "showline": True,
+                                  "title": "",
+                                  "type": "category"
+                                },
+                                yaxis = {
+                                  "autorange": True,
+                                  "range": [0, 22.9789473684],
+                                  "showgrid": True,
+                                  "showline": True,
+                                  "title": "",
+                                  "type": "linear",
+                                  "zeroline": False
+                                }
+                            )
+                        },
+                        config={
+                            'displayModeBar': False
+                        }
+                    )
                 ], className="six columns"),
 
                 html.Div([
                     html.H6("Hypothetical growth of $10,000",
                             className="gs-header gs-table-header padded"),
-                    html.Iframe(src="https://plot.ly/~bdun9/2752.embed?modebar=false&link=false&autosize=true", \
-                                seamless="seamless", style={'border': '0', 'width': "100%", 'height': "200"})
+                    dcc.Graph(
+                        id="grpah-2",
+                        figure={
+                            'data': [
+                                go.Scatter(
+                                    x = ["2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018"],
+                                    y = ["10000", "7500", "9000", "10000", "10500", "11000", "14000", "18000", "19000", "20500", "24000"],
+                                    line = {"color": "rgb(53, 83, 255)"},
+                                    mode = "lines",
+                                    name = "500 Index Fund Inv"
+                                )
+                            ],
+                            'layout': go.Layout(
+                                autosize = False,
+                                title = "",
+                                font = {
+                                  "family": "Raleway",
+                                  "size": 10
+                                },
+                                height = 200,
+                                width = 340,
+                                hovermode = "closest",
+                                legend = {
+                                  "x": -0.0277108433735,
+                                  "y": -0.142606516291,
+                                  "orientation": "h"
+                                },
+                                margin = {
+                                  "r": 20,
+                                  "t": 20,
+                                  "b": 20,
+                                  "l": 50
+                                },
+                                showlegend = True,
+                                xaxis = {
+                                  "autorange": True,
+                                  "linecolor": "rgb(0, 0, 0)",
+                                  "linewidth": 1,
+                                  "range": [2008, 2018],
+                                  "showgrid": False,
+                                  "showline": True,
+                                  "title": "",
+                                  "type": "linear"
+                                },
+                                yaxis = {
+                                  "autorange": False,
+                                  "gridcolor": "rgba(127, 127, 127, 0.2)",
+                                  "mirror": False,
+                                  "nticks": 4,
+                                  "range": [0, 30000],
+                                  "showgrid": True,
+                                  "showline": True,
+                                  "ticklen": 10,
+                                  "ticks": "outside",
+                                  "title": "$",
+                                  "type": "linear",
+                                  "zeroline": False,
+                                  "zerolinewidth": 4
+                                }
+                            )
+                        },
+                        config={
+                            'displayModeBar': False
+                        }
+                    )
                 ], className="six columns"),
 
             ], className="row "),
@@ -165,8 +306,165 @@ overview = html.Div([  # page 1
                 html.Div([
                     html.H6("Risk Potential",
                             className="gs-header gs-table-header padded"),
-                    html.Iframe(src="https://plot.ly/~bdun9/2748.embed?modebar=false&link=false&autosize=true", \
-                                seamless="seamless", style={'border': '0', 'width': "100%", 'height': "200"})
+                    dcc.Graph(
+                        id='graph-3',
+                        figure = {
+                            'data': [
+                                go.Scatter(
+                                    x = ["0", "0.18", "0.18", "0"],
+                                    y = ["0.2", "0.2", "0.4", "0.2"],
+                                    fill = "tozerox",
+                                    fillcolor = "rgba(31, 119, 180, 0.2)",
+                                    hoverinfo = "none",
+                                    line = {"width": 0},
+                                    mode = "lines",
+                                    name = "B",
+                                    showlegend = False
+                                ),
+                                go.Scatter(
+                                    x = ["0.2", "0.38", "0.38", "0.2", "0.2"],
+                                    y = ["0.2", "0.2", "0.6", "0.4", "0.2"],
+                                    fill = "tozerox",
+                                    fillcolor = "rgba(31, 119, 180, 0.4)",
+                                    hoverinfo = "none",
+                                    line = {"width": 0},
+                                    mode = "lines",
+                                    name = "D",
+                                    showlegend = False
+                                ),
+                                go.Scatter(
+                                    x = ["0.4", "0.58", "0.58", "0.4", "0.4"],
+                                    y = ["0.2", "0.2", "0.8", "0.6", "0.2"],
+                                    fill = "tozerox",
+                                    fillcolor = "rgba(31, 119, 180, 0.6)",
+                                    hoverinfo = "none",
+                                    line = {"width": 0},
+                                    mode = "lines",
+                                    name = "F",
+                                    showlegend = False
+                                ),
+                                go.Scatter(
+                                    x = ["0.6", "0.78", "0.78", "0.6", "0.6"],
+                                    y = ["0.2", "0.2", "1", "0.8", "0.2"],
+                                    fill = "tozerox",
+                                    fillcolor = "rgb(31, 119, 180)",
+                                    hoverinfo = "none",
+                                    line = {"width": 0},
+                                    mode = "lines",
+                                    name = "H",
+                                    showlegend = False
+                                ),
+                                go.Scatter(
+                                    x = ["0.8", "0.98", "0.98", "0.8", "0.8"],
+                                    y = ["0.2", "0.2", "1.2", "1", "0.2"],
+                                    fill = "tozerox",
+                                    fillcolor = "rgba(31, 119, 180, 0.8)",
+                                    hoverinfo = "none",
+                                    line = {"width": 0},
+                                    mode = "lines",
+                                    name = "J",
+                                    showlegend = False
+                                ),
+                            ],
+                            'layout': go.Layout(
+                                title = "",
+                                annotations = [
+                                    {
+                                      "x": 0.69,
+                                      "y": 0.6,
+                                      "font": {
+                                        "color": "rgb(31, 119, 180)",
+                                        "family": "Raleway",
+                                        "size": 30
+                                      },
+                                      "showarrow": False,
+                                      "text": "<b>4</b>",
+                                      "xref": "x",
+                                      "yref": "y"
+                                    },
+                                    {
+                                      "x": 0.0631034482759,
+                                      "y": -0.04,
+                                      "align": "left",
+                                      "font": {
+                                        "color": "rgb(44, 160, 44)",
+                                        "family": "Raleway",
+                                        "size": 10
+                                      },
+                                      "showarrow": False,
+                                      "text": "<b>Less risk<br>Less reward</b>",
+                                      "xref": "x",
+                                      "yref": "y"
+                                    },
+                                    {
+                                      "x": 0.92125,
+                                      "y": -0.04,
+                                      "align": "right",
+                                      "font": {
+                                        "color": "rgb(214, 39, 40)",
+                                        "family": "Raleway",
+                                        "size": 10
+                                      },
+                                      "showarrow": False,
+                                      "text": "<b>More risk<br>More reward</b>",
+                                      "xref": "x",
+                                      "yref": "y"
+                                    }
+                                  ],
+                                  autosize = False,
+                                  height = 200,
+                                  width = 340,
+                                  hovermode = "closest",
+                                  margin = {
+                                    "r": 10,
+                                    "t": 20,
+                                    "b": 80,
+                                    "l": 10
+                                  },
+                                  shapes = [
+                                    {
+                                      "fillcolor": "rgb(255, 255, 255)",
+                                      "line": {
+                                        "color": "rgb(31, 119, 180)",
+                                        "width": 4
+                                      },
+                                      "opacity": 1,
+                                      "type": "circle",
+                                      "x0": 0.621,
+                                      "x1": 0.764,
+                                      "xref": "x",
+                                      "y0": 0.135238095238,
+                                      "y1": 0.98619047619,
+                                      "yref": "y"
+                                    }
+                                  ],
+                                  showlegend = True,
+                                  xaxis = {
+                                    "autorange": False,
+                                    "fixedrange": True,
+                                    "range": [-0.05, 1.05],
+                                    "showgrid": False,
+                                    "showticklabels": False,
+                                    "title": "<br>",
+                                    "type": "linear",
+                                    "zeroline": False
+                                  },
+                                  yaxis = {
+                                    "autorange": False,
+                                    "fixedrange": True,
+                                    "range": [-0.3, 1.6],
+                                    "showgrid": False,
+                                    "showticklabels": False,
+                                    "title": "<br>",
+                                    "type": "linear",
+                                    "zeroline": False
+                                }
+                            )
+                        },
+                        config={
+                            'displayModeBar': False
+                        }
+                    )
                 ], className="six columns"),
 
             ], className="row ")
@@ -214,8 +512,93 @@ pricePerformance = html.Div([  # page 2
                 html.Div([
                     html.H6("Performance",
                             className="gs-header gs-table-header padded"),
-                    html.Iframe(src="https://plot.ly/~bdun9/2803.embed?modebar=false&link=false&autosize=true", \
-                                seamless="seamless", style={'border': '0', 'width': "100%", 'height': "200"})
+                    dcc.Graph(
+                        id='graph-4',
+                        figure={
+                            'data': [
+                                go.Scatter(
+                                    x = df_graph['Date'],
+                                    y = df_graph['Vanguard 500 Index Fund'],
+                                    line = {"color": "rgb(53, 83, 255)"},
+                                    mode = "lines",
+                                    name = "Vanguard 500 Index Fund"
+                                ),
+                                go.Scatter(
+                                    x = df_graph['Date'],
+                                    y = df_graph['MSCI EAFE Index Fund (ETF)'],
+                                    line = {"color": "rgb(255, 225, 53)"},
+                                    mode = "lines",
+                                    name = "MSCI EAFE Index Fund (ETF)"
+                                )
+                            ],
+                            'layout': go.Layout(
+                                autosize = False,
+                                width = 700,
+                                height = 200,
+                                font = {
+                                    "family": "Raleway",
+                                    "size": 10
+                                  },
+                                 margin = {
+                                    "r": 40,
+                                    "t": 40,
+                                    "b": 30,
+                                    "l": 40
+                                  },
+                                  showlegend = True,
+                                  titlefont = {
+                                    "family": "Raleway",
+                                    "size": 10
+                                  },
+                                  xaxis = {
+                                    "autorange": True,
+                                    "range": ["2007-12-31", "2018-03-06"],
+                                    "rangeselector": {"buttons": [
+                                        {
+                                          "count": 1,
+                                          "label": "1Y",
+                                          "step": "year",
+                                          "stepmode": "backward"
+                                        },
+                                        {
+                                          "count": 3,
+                                          "label": "3Y",
+                                          "step": "year",
+                                          "stepmode": "backward"
+                                        },
+                                        {
+                                          "count": 5,
+                                          "label": "5Y",
+                                          "step": "year"
+                                        },
+                                        {
+                                          "count": 10,
+                                          "label": "10Y",
+                                          "step": "year",
+                                          "stepmode": "backward"
+                                        },
+                                        {
+                                          "label": "All",
+                                          "step": "all"
+                                        }
+                                      ]},
+                                    "showline": True,
+                                    "type": "date",
+                                    "zeroline": False
+                                  },
+                                  yaxis = {
+                                    "autorange": True,
+                                    "range": [18.6880162434, 278.431996757],
+                                    "showline": True,
+                                    "type": "linear",
+                                    "zeroline": False
+                                  }
+                            )
+                        },
+                        config={
+                            'displayModeBar': False
+                        }
+                    )
                 ], className="twelve columns")
 
             ], className="row "),
@@ -288,8 +671,225 @@ portfolioManagement = html.Div([ # page 3
 
                 html.Div([
                     html.Strong(["Stock style"]),
-                    html.Iframe(src="https://plot.ly/~bdun9/2824.embed?modebar=false&link=false&autosize=true", \
-                                seamless="seamless", style={'border': '0', 'width': "80%", 'height': "100%"})
+                    dcc.Graph(
+                        id='graph-5',
+                        figure={
+                            'data': [
+                                go.Scatter(
+                                    x = ["1"],
+                                    y = ["1"],
+                                    hoverinfo = "none",
+                                    marker = {
+                                        "color": ["transparent"]
+                                    },
+                                    mode = "markers",
+                                    name = "B",
+                                )
+                            ],
+                            'layout': go.Layout(
+                                title = "",
+                                annotations = [
+                                {
+                                  "x": 0.990130093458,
+                                  "y": 1.00181709504,
+                                  "align": "left",
+                                  "font": {
+                                    "family": "Raleway",
+                                    "size": 9
+                                  },
+                                  "showarrow": False,
+                                  "text": "<b>Market<br>Cap</b>",
+                                  "xref": "x",
+                                  "yref": "y"
+                                },
+                                {
+                                  "x": 1.00001816013,
+                                  "y": 1.35907755794e-16,
+                                  "font": {
+                                    "family": "Raleway",
+                                    "size": 9
+                                  },
+                                  "showarrow": False,
+                                  "text": "<b>Style</b>",
+                                  "xref": "x",
+                                  "yanchor": "top",
+                                  "yref": "y"
+                                }
+                              ],
+                              autosize = False,
+                              width = 200,
+                              height = 150,
+                              hovermode = "closest",
+                              margin = {
+                                "r": 30,
+                                "t": 20,
+                                "b": 20,
+                                "l": 30
+                              },
+                              shapes = [
+                                {
+                                  "fillcolor": "rgb(127, 127, 127)",
+                                  "line": {
+                                    "color": "rgb(0, 0, 0)",
+                                    "width": 2
+                                  },
+                                  "opacity": 0.3,
+                                  "type": "rectangle",
+                                  "x0": 0,
+                                  "x1": 0.33,
+                                  "xref": "paper",
+                                  "y0": 0,
+                                  "y1": 0.33,
+                                  "yref": "paper"
+                                },
+                                {
+                                  "fillcolor": "rgb(127, 127, 127)",
+                                  "line": {
+                                    "color": "rgb(0, 0, 0)",
+                                    "dash": "solid",
+                                    "width": 2
+                                  },
+                                  "opacity": 0.3,
+                                  "type": "rectangle",
+                                  "x0": 0.33,
+                                  "x1": 0.66,
+                                  "xref": "paper",
+                                  "y0": 0,
+                                  "y1": 0.33,
+                                  "yref": "paper"
+                                },
+                                {
+                                  "fillcolor": "rgb(127, 127, 127)",
+                                  "line": {
+                                    "color": "rgb(0, 0, 0)",
+                                    "width": 2
+                                  },
+                                  "opacity": 0.3,
+                                  "type": "rectangle",
+                                  "x0": 0.66,
+                                  "x1": 0.99,
+                                  "xref": "paper",
+                                  "y0": 0,
+                                  "y1": 0.33,
+                                  "yref": "paper"
+                                },
+                                {
+                                  "fillcolor": "rgb(127, 127, 127)",
+                                  "line": {
+                                    "color": "rgb(0, 0, 0)",
+                                    "width": 2
+                                  },
+                                  "opacity": 0.3,
+                                  "type": "rectangle",
+                                  "x0": 0,
+                                  "x1": 0.33,
+                                  "xref": "paper",
+                                  "y0": 0.33,
+                                  "y1": 0.66,
+                                  "yref": "paper"
+                                },
+                                {
+                                  "fillcolor": "rgb(127, 127, 127)",
+                                  "line": {
+                                    "color": "rgb(0, 0, 0)",
+                                    "width": 2
+                                  },
+                                  "opacity": 0.3,
+                                  "type": "rectangle",
+                                  "x0": 0.33,
+                                  "x1": 0.66,
+                                  "xref": "paper",
+                                  "y0": 0.33,
+                                  "y1": 0.66,
+                                  "yref": "paper"
+                                },
+                                {
+                                  "fillcolor": "rgb(127, 127, 127)",
+                                  "line": {
+                                    "color": "rgb(0, 0, 0)",
+                                    "width": 2
+                                  },
+                                  "opacity": 0.3,
+                                  "type": "rectangle",
+                                  "x0": 0.66,
+                                  "x1": 0.99,
+                                  "xref": "paper",
+                                  "y0": 0.33,
+                                  "y1": 0.66,
+                                  "yref": "paper"
+                                },
+                                {
+                                  "fillcolor": "rgb(127, 127, 127)",
+                                  "line": {
+                                    "color": "rgb(0, 0, 0)",
+                                    "width": 2
+                                  },
+                                  "opacity": 0.3,
+                                  "type": "rectangle",
+                                  "x0": 0,
+                                  "x1": 0.33,
+                                  "xref": "paper",
+                                  "y0": 0.66,
+                                  "y1": 0.99,
+                                  "yref": "paper"
+                                },
+                                {
+                                  "fillcolor": "rgb(255, 127, 14)",
+                                  "line": {
+                                    "color": "rgb(0, 0, 0)",
+                                    "width": 1
+                                  },
+                                  "opacity": 0.9,
+                                  "type": "rectangle",
+                                  "x0": 0.33,
+                                  "x1": 0.66,
+                                  "xref": "paper",
+                                  "y0": 0.66,
+                                  "y1": 0.99,
+                                  "yref": "paper"
+                                },
+                                {
+                                  "fillcolor": "rgb(127, 127, 127)",
+                                  "line": {
+                                    "color": "rgb(0, 0, 0)",
+                                    "width": 2
+                                  },
+                                  "opacity": 0.3,
+                                  "type": "rectangle",
+                                  "x0": 0.66,
+                                  "x1": 0.99,
+                                  "xref": "paper",
+                                  "y0": 0.66,
+                                  "y1": 0.99,
+                                  "yref": "paper"
+                                }
+                              ],
+                              xaxis = {
+                                "autorange": True,
+                                "range": [0.989694747864, 1.00064057995],
+                                "showgrid": False,
+                                "showline": False,
+                                "showticklabels": False,
+                                "title": "<br>",
+                                "type": "linear",
+                                "zeroline": False
+                              },
+                              yaxis = {
+                                "autorange": True,
+                                "range": [-0.0358637178721, 1.06395696354],
+                                "showgrid": False,
+                                "showline": False,
+                                "showticklabels": False,
+                                "title": "<br>",
+                                "type": "linear",
+                                "zeroline": False
+                              }
+                            )
+                        },
+                        config={
+                            'displayModeBar': False
+                        }
+                    )
 
                 ], className="four columns"),
 
@@ -368,8 +968,113 @@ feesMins = html.Div([  # page 4
                 html.Div([
                     html.Br([]),
                     html.Strong("Fees on $10,000 invested over 10 years"),
-                    html.Iframe(src="https://plot.ly/~bdun9/2814.embed?modebar=false&link=false&autosize=true", \
-                                seamless="seamless", style={'border': '0', 'width': "100%", 'height': "165"})
+                    dcc.Graph(
+                        id = 'graph-6',
+                        figure = {
+                            'data': [
+                                go.Bar(
+                                    x = ["Category Average", "This fund"],
+                                    y = ["2242", "329"],
+                                    marker = {"color": "rgb(53, 83, 255)"},
+                                    name = "A"
+                                ),
+                                go.Bar(
+                                    x = ["This fund"],
+                                    y = ["1913"],
+                                    marker = {"color": "#ADAAAA"},
+                                    name = "B"
+                                )
+                            ],
+                            'layout': go.Layout(
+                                annotations = [
+                                    {
+                                      "x": -0.0111111111111,
+                                      "y": 2381.92771084,
+                                      "font": {
+                                        "color": "rgb(0, 0, 0)",
+                                        "family": "Raleway",
+                                        "size": 10
+                                      },
+                                      "showarrow": False,
+                                      "text": "$2,242",
+                                      "xref": "x",
+                                      "yref": "y"
+                                    },
+                                    {
+                                      "x": 0.995555555556,
+                                      "y": 509.638554217,
+                                      "font": {
+                                        "color": "rgb(0, 0, 0)",
+                                        "family": "Raleway",
+                                        "size": 10
+                                      },
+                                      "showarrow": False,
+                                      "text": "$329",
+                                      "xref": "x",
+                                      "yref": "y"
+                                    },
+                                    {
+                                      "x": 0.995551020408,
+                                      "y": 1730.32432432,
+                                      "font": {
+                                        "color": "rgb(0, 0, 0)",
+                                        "family": "Raleway",
+                                        "size": 10
+                                      },
+                                      "showarrow": False,
+                                      "text": "You save<br><b>$1,913</b>",
+                                      "xref": "x",
+                                      "yref": "y"
+                                    }
+                                  ],
+                                  autosize = False,
+                                  height = 150,
+                                  width = 340,
+                                  bargap = 0.4,
+                                  barmode = "stack",
+                                  hovermode = "closest",
+                                  margin = {
+                                    "r": 40,
+                                    "t": 20,
+                                    "b": 20,
+                                    "l": 40
+                                  },
+                                  showlegend = False,
+                                  title = "",
+                                  xaxis = {
+                                    "autorange": True,
+                                    "range": [-0.5, 1.5],
+                                    "showline": True,
+                                    "tickfont": {
+                                      "family": "Raleway",
+                                      "size": 10
+                                    },
+                                    "title": "",
+                                    "type": "category",
+                                    "zeroline": False
+                                  },
+                                  yaxis = {
+                                    "autorange": False,
+                                    "mirror": False,
+                                    "nticks": 3,
+                                    "range": [0, 3000],
+                                    "showgrid": True,
+                                    "showline": True,
+                                    "tickfont": {
+                                      "family": "Raleway",
+                                      "size": 10
+                                    },
+                                    "tickprefix": "$",
+                                    "title": "",
+                                    "type": "linear",
+                                    "zeroline": False
+                                  }
+                            )
+                        },
+                        config={
+                            'displayModeBar': False
+                        }
+                    )
                 ], className="six columns"),
 
             ], className="row "),
@@ -610,7 +1315,7 @@ for css in external_css:
     app.css.append_css({"external_url": css})
 
 external_js = ["https://code.jquery.com/jquery-3.2.1.min.js",
-               "https://cdn.rawgit.com/plotly/dash-app-stylesheets/a3401de132a6d0b652ba11548736b1d1e80aa10d/dash-goldman-sachs-report-js.js"]
+               "https://codepen.io/bcd/pen/YaXojL.js"]
 
 for js in external_js:
     app.scripts.append_script({"external_url": js})
